@@ -7,5 +7,5 @@ You can launch the scripts in the JupyterLite notebook by clicking here:
 This repository contains all scripts and data needed for the Climate Adaptation workshop of the course MEGA, organised within the MSc Architecture - Building Technology Track at TU Delft.
 
 The **content** folder contains the following scripts:
-1. **analyse_EPWs.ipynb**, to read and compare different weather files for the location of Rotterdam/Amsterdam
-2. 
+- **analyse_EPWs.ipynb**, to read and compare different weather files for the location of Rotterdam/Amsterdam
+- **Exercise_Mega.py**, to calculate the Universal Thermal Climate Index (UTCI) and the Loss of Performance due to overheating
