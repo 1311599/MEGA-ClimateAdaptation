@@ -9,7 +9,7 @@ import pandas as pd
 import pvlib
 import matplotlib.patches as mpatches
 
-# Set date and location
+# Set date and location, make sure the year is correct
 start_date = pd.Timestamp(year=1995, month=7, day=15, hour=8, minute=0, tz='UTC')
 latitude = 51.92
 longitude = 4.48
@@ -24,6 +24,8 @@ albedo = 0.2  # typical value for urban surfaces
 
 # Initialize a list to store the total solar radiation for each hour
 total_solar_radiation_list = []
+
+#we will now upload the weather file as done in the previous exercise
 
 epw_header = ['year', 'month', 'day', 'hour', 'minute', 'u_flag', 'Dry bulb T [C]', 'Dew point T [C]',
               'Rel Humidity [%]', 'Atm pressure [Pa]', 'GHIe [Wh/m2]', 'DNIe [Wh/m2]', 'Infrared horiz rad [Wh/m2]',
@@ -64,8 +66,8 @@ def read_epw(fn, year=None, printcoord=False):
         return epw
 
 # Upload the weather file, we are skipping the first 8 rows that contain metadata
-epw = read_epw('C:/Users/al786/Documents/MEGA/NLD_Amsterdam.062400_IWEC.epw')
-epw=read_epw('C:/Users/al786/Documents/MEGA/NLD_AMSTERDAM_HadCM3-A2-2050.epw')
+#epw = read_epw('C:/Users/al786/Documents/MEGA/NLD_Amsterdam.062400_IWEC.epw')
+#epw=read_epw('C:/Users/al786/Documents/MEGA/NLD_AMSTERDAM_HadCM3-A2-2050.epw')
 epw=read_epw('C:/Users/al786/Documents/MEGA/Rotterdam-ISD063440-2020.epw')
 
 
