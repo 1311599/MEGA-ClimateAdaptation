@@ -66,18 +66,15 @@ def read_epw(fn, year=None, printcoord=False):
         return epw
 
 # Upload the weather file, we are skipping the first 8 rows that contain metadata
-#epw = read_epw('C:/Users/al786/Documents/MEGA/NLD_Amsterdam.062400_IWEC.epw')
-#epw=read_epw('C:/Users/al786/Documents/MEGA/NLD_AMSTERDAM_HadCM3-A2-2050.epw')
-epw=read_epw('C:/Users/al786/Documents/MEGA/Rotterdam-ISD063440-2020.epw')
+#epw = read_epw('EPW-MEGA/IWEC/NLD_Amsterdam.062400_IWEC.epw')
+#epw=read_epw('EPW-MEGA/CCWeaGenerator/NLD_AMSTERDAM_HadCM3-A2-2080.epw')
+epw=read_epw('EPW-MEGA/Historical/Rotterdam-ISD063440-2020.epw')
 
-
-#print (epw)
-#print (epw.columns)
+#initialise lists
 total_gh= []
 tdb_list=[]
 rh_list=[]
 wind_list=[]
-# Set the start date and time
 
 
 
@@ -120,11 +117,9 @@ for hour in range(7, 20):
     rh_list.append(rh)
     wind_list.append(wind)
 
-# Print the list of total solar radiation values
-#print(total_solar_radiation_list)
-#print(tdb_list)
-#print(rh_list)
-#print(wind_list)
+### for the calculation of the UTCI we will refer to the pythermalcomfort library
+##Please cite us if you use this package: Tartarini, F., Schiavon, S., 2020. pythermalcomfort: A Python package for thermal comfort research. 
+##SoftwareX 12, 100578. https://doi.org/10.1016/j.softx.2020.100578
 
 def units_converter(from_units="ip", **kwargs):
     """Converts IP values to SI units.
@@ -164,39 +159,6 @@ def units_converter(from_units="ip", **kwargs):
 
     return results
 
-def radiant_temperature(T_se, tdb, T_sky):
-    sigma = 5.67e-8  # Stefan-Boltzmann constant
-    num = ((T_se+ 273.15)**4) *1
-    Tr = np.sqrt(np.power(num, 4))-273.15
-    return Tr
-
-# Example values for a person standing 2m from an infinite wall
-
-wall_distance = 2.0  # meters
-
-U = 0.36 # U-value of wall
-alpha = 1 # assume a gray wall - this is the wall solar absorptivity
-
-alpha_long=0.8#long wave absorptivity
-h= 25.0 #boundary layer heat transfer coefficient
-T_sky=-270.15
-
-# Example solar radiation values per hour for a day in July
-#solar_radiation_per_hour = [450, 500, 600, 700, 750, 800, 850, 900, 800, 700, 600, 500, 450]
-#tdb_per_hour = [25, 24, 25, 26, 26, 28, 29, 27, 26, 25, 26, 25, 25]
-
-sky = 50.0 #long wave radiation to clear sky in summer
-
-
-
-# Calculate the radiant temperature and UTCI for each hour and the DT from comfort threshold
-Tr_values = []
-UTCI_values = []
-T_se_values = []
-T_sol_air_values = []
-Delta_values = []
-Delta_num= []
-Normalised_performance=[]
 def valid_range(x, valid):
     """Filter values based on a valid range."""
     return np.where((x >= valid[0]) & (x <= valid[1]), x, np.nan)
@@ -643,7 +605,34 @@ def utci(tdb, tr, v, rh, units="SI", return_stress_category=False, limit_inputs=
     else:
         return np.round_(utci_approx, 1)
 
+## we will now calculate the radiant temperature as average of the surface temperature around the person. We will
+# impose the assumption view factor is 1, which is not accurate
+def radiant_temperature(T_se, tdb, T_sky):
+    sigma = 5.67e-8  # Stefan-Boltzmann constant
+    num = ((T_se+ 273.15)**4) *1
+    Tr = np.sqrt(np.power(num, 4))-273.15
+    return Tr
 
+# Define characteristics of your wall
+
+alpha = 1 # assume a black wall - this is the wall solar absorptivity, 0.6 if grey and so forth
+alpha_long=0.8#long wave absorptivity
+h= 25.0 #boundary layer heat transfer coefficient
+T_sky=-270.15
+
+
+# Calculate the radiant temperature and UTCI for each hour and the DT from comfort threshold
+
+#initialize variables
+Tr_values = []
+UTCI_values = []
+T_se_values = []
+T_sol_air_values = []
+Delta_values = []
+Delta_num= []
+Normalised_performance=[]
+
+##we will now calculate the UTCI for the given boundary conditions and the associated resilience
 
 for solar_radiation, tdb, rh, wind in zip(total_solar_radiation_list, tdb_list, rh_list, wind_list):
     T_sol_air = tdb + ((alpha * solar_radiation - alpha_long * sky) / h)
@@ -673,10 +662,7 @@ for solar_radiation, tdb, rh, wind in zip(total_solar_radiation_list, tdb_list, 
     Normalised_performance.append(Normalised_Delta)
 
 
-print(Normalised_performance)
-print(T_sol_air_values)
 # Calculate the surface area using the trapezoidal rule
-#if UTCI > 26:
 resilience_area = np.trapz(Normalised_performance,dx=1)
 
 # Alternatively, you can use the Simpson's rule for numerical integration
@@ -685,7 +671,7 @@ resilience_area = np.trapz(Normalised_performance,dx=1)
 # Print the calculated area
 print("Surface area under the curve: ", resilience_area)
 
-
+## we will now plot the performance
 # Generate the x-axis values as a range from 0 to the length of the Delta_values list
 x_values = ["07:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00" ]
 
