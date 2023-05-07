@@ -8,4 +8,4 @@ This repository contains all scripts and data needed for the Climate Adaptation 
 
 The **content** folder contains the following scripts:
 - **analyse_EPWs.ipynb**, to read and compare different weather files for the location of Rotterdam/Amsterdam
-- **Exercise_Mega.py**, to calculate the Universal Thermal Climate Index (UTCI) and the Loss of Performance due to overheating
+- **Exercise_Mega_final.ipynb**, to calculate the Universal Thermal Climate Index (UTCI) and the Loss of Performance due to overheating
