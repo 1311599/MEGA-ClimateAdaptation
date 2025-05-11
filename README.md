@@ -11,4 +11,6 @@ The **content** folder contains the following scripts:
 - **Exercise_Mega_2.ipynb**, to calculate the Universal Thermal Climate Index (UTCI) and the Loss of Performance due to overheating
 - **flood_vulnerability.ipynb**, to calculate flood resilience of building archetypes under a selected hazard scenario
   
+=======
+
 Before starting, if you have already accessed Jupyter during the workshop, make sure the Jupiter notebook is updated. For this do right-click on the name of the file in Jupiter and delete it. It will then uploaded instanteneously. If the Kernel stops to respond, you can also restart it by pressing the arrow icon on the top.
